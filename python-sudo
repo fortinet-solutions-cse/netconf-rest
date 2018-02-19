@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sudo ~/PycharmProjects/netconf-rest/venv/bin/python "$@"
+
