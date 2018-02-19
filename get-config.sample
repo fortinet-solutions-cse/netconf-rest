@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <capabilities>
+            <capability>urn:ietf:params:netconf:base:1.0</capability>
+        </capabilities>
+        </hello>
+    ]]>]]>
+    
+   <nc:rpc xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" nc:message-id="1">
+    <nc:get-config xmlns:nc="urn:ietf:params:netconf:base:1.0" >
+        <nc:source>
+           <nc:running/>
+        </nc:source>
+        <nc:filter nc:type="subtree">
+            <vnfi xmlns="urn:samsung:vnf-alarm-interface" xmlns:vaintf="urn:samsung:vnf-alarm-interface"/>
+        </nc:filter>
+    </nc:get-config>
+    </nc:rpc>
+      ]]>]]>

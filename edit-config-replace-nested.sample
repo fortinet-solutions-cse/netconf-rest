@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?> 
+        <hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <capabilities>
+            <capability>urn:ietf:params:netconf:base:1.0</capability>
+        </capabilities>
+        </hello>
+    
+   ]]>]]>
+
+ <rpc message-id="109" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+	<edit-config>
+	  <target><running/></target>
+	  <default-operation>none</default-operation>
+	  <nc:config xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+	      <cmdb>
+            <application>
+               <list mkey="id">
+                 <id>profile1</id>
+                 <entries mkey="id" nc:operation="replace">
+                   <id>1</id>
+                   <application>[{"id": 31236}, {"id":31237}]</application>
+                 </entries>
+               </list>
+            </application>
+          </cmdb>
+	  </nc:config>
+	</edit-config>
+  </rpc>
+  
+  ]]>]]>
+
+
