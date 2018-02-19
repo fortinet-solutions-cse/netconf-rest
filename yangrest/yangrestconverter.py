@@ -3,39 +3,47 @@ import logging
 logger = logging.getLogger(__name__)  # pylint: disable=C0103
 
 
-class YangRestConverter(object):
+class YangUtil:
 
-
-    def remove_urn(self, text):
+    @staticmethod
+    def remove_urn(text):
         return text[text.find('}') + 1:]
 
-    def contains_operation(self, netconf_data):
+    @staticmethod
+    def contains_operation(netconf_data):
+        # Checks if current tag contains an operation
+
         for attrib in netconf_data.attrib:
-            if self.remove_urn(attrib) == "operation":
+            if YangUtil.remove_urn(attrib) == "operation":
                 return True
         return False
 
-    def contains_mkey(self, netconf_data):
+    @staticmethod
+    def contains_mkey(netconf_data):
+        # Checks if current tag contains mkey
         return 'mkey' in netconf_data.attrib
 
-    def extract_table_operation(self, netconf_data):
+    @staticmethod
+    def extract_operation(netconf_data):
         for elem in netconf_data.iter():
             for attrib in elem.attrib:
-                if self.remove_urn(attrib) == "operation":
+                if YangUtil.remove_urn(attrib) == "operation":
                     return elem.attrib[attrib]
 
         raise Exception("No operation found in netconf data")
 
-    def extract_mkey(self, netconf_data):
+    @staticmethod
+    def extract_mkey(netconf_data):
         mkey = netconf_data.attrib['mkey']
 
         for elem in netconf_data:
-            if self.remove_urn(elem.tag) == mkey:
+            if YangUtil.remove_urn(elem.tag) == mkey:
                 return elem.text
 
-        raise Exception("Error, mkey: '%s' not found in netconf data", format(mkey))
+        raise Exception("Error, mkey: '{0}' not found in data: {1}", format(mkey), format(netconf_data))
 
-    def extract_table_content(self, netconf_data):
+    @staticmethod
+    def extract_content_under_operation(netconf_data):
         # Algorithm to extract data will be: Get every content inside the tag
         # that contains 'operation' attribute
 
@@ -43,64 +51,80 @@ class YangRestConverter(object):
 
         for elem in netconf_data.iter():
             for attrib in elem.attrib:
-                if self.remove_urn(attrib) == "operation":
+                if YangUtil.remove_urn(attrib) == "operation":
                     for avp in elem:
-                        content[self.remove_urn(avp.tag)] = avp.text
+                        content[YangUtil.remove_urn(avp.tag)] = avp.text
         return content
 
-    def extract_path_until_final_resource(self, netconf_data, is_delete_operation=False):
+
+class YangRestConverter(object):
+
+    def _extract_path_until_final_resource(self, netconf_data, add_deepest_key=False):
         # Algorithm to calculate the rest of the path consists on going down until
         # a tag with 'operation' attribute is found. That tag will
         # be the last one to be included in the final url
         path = ""
-        while not self.contains_operation(netconf_data):
-            path += "/" + self.remove_urn(netconf_data.tag)
-            if self.contains_mkey(netconf_data):
-                path += "/" + self.extract_mkey(netconf_data)
-                netconf_data = netconf_data[1]
+        while not YangUtil.contains_operation(netconf_data):
+            path += "/" + YangUtil.remove_urn(netconf_data.tag)
+            if YangUtil.contains_mkey(netconf_data):
+                path += "/" + YangUtil.extract_mkey(netconf_data)
+                if len(netconf_data)>1:
+                    netconf_data = netconf_data[1]
+                else:
+                    break
             else:
-                netconf_data = netconf_data[0]
+                if len(netconf_data>0):
+                    netconf_data = netconf_data[0]
+                else:
+                    break
 
-        if self.contains_operation(netconf_data):
-            path += "/" + self.remove_urn(netconf_data.tag)
-            if is_delete_operation:
-                path += "/" + self.remove_urn(self.extract_mkey(netconf_data))
+        if YangUtil.contains_operation(netconf_data):
+            path += "/" + YangUtil.remove_urn(netconf_data.tag)
+            if add_deepest_key:
+                path += "/" + YangUtil.remove_urn(YangUtil.extract_mkey(netconf_data))
             return path
         else:
-            raise Exception("Error, not able to calculate path. Is operation defined?")
+            return path
+ #            raise Exception("Error, not able to calculate path. Is operation defined?")
 
-    def extract_name_content_operation(self, netconf_data):
+    def _extract_name_content_operation(self, netconf_data):
 
-        name = self.remove_urn(netconf_data.tag)
+        name = YangUtil.remove_urn(netconf_data.tag)
         logger.debug("Name: %s", name)
 
-        operation = self.extract_table_operation(netconf_data)
-        logger.debug("Operation: %s", operation)
+        operation = None
+        try:
+            operation = YangUtil.extract_operation(netconf_data)
+            logger.debug("Operation: %s", operation)
+        except Exception:
+            logger.debug("Operation not found, is this a 'get'?")
 
-        remaining_path = self.extract_path_until_final_resource(netconf_data,
-                                                                is_delete_operation=operation == "delete")
+        is_a_modification = operation == "delete" or operation == "replace" or operation=="merge"
+
+        remaining_path = self._extract_path_until_final_resource(netconf_data,
+                                                                 add_deepest_key=is_a_modification)
         logger.debug("Remaining path: %s", remaining_path)
 
-        content = self.extract_table_content(netconf_data)
+        content = YangUtil.extract_content_under_operation(netconf_data)
         logger.debug("Content: %s", content)
 
         return remaining_path, content, operation
 
-    def extract_path_content_operation(self, netconf_data):
-        path = self.remove_urn(netconf_data.tag)
+    def _extract_path_content_operation(self, netconf_data):
+        path = YangUtil.remove_urn(netconf_data.tag)
         logger.debug("Path: %s", path)
 
-        (name, content, operation) = self.extract_name_content_operation(netconf_data[0])
+        (name, content, operation) = self._extract_name_content_operation(netconf_data[0])
 
         return path + name, content, operation
 
     def extract_url_content_operation(self, netconf_data):
-        api_type = self.remove_urn(netconf_data.tag)
+        api_type = YangUtil.remove_urn(netconf_data.tag)
 
         logger.debug("Api Type: %s", api_type)
 
         if api_type == "cmdb":
-            (path, content, operation) = self.extract_path_content_operation(netconf_data[0])
+            (path, content, operation) = self._extract_path_content_operation(netconf_data[0])
 
         elif api_type == "monitor":
             raise Exception("Monitor url are not supported yet")
