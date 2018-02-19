@@ -19,8 +19,8 @@
                <urlfilter mkey="id">
                  <id>1</id>
                  <entries nc:operation="create" mkey="id">
-                        <id> 48 </id>
-                        <url> www.test.com </url>
+                        <id>48</id>
+                        <url>www.test.com</url>
                  </entries>
                </urlfilter>
             </webfilter>
