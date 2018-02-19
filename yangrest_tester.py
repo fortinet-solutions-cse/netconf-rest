@@ -164,14 +164,63 @@ def test_get_urlfilter_child_object():
     assert operation == None
 
 
+def test_edit_urlfilter_object():
+    yrc = YangRestConverter()
+
+    netconf_data = """
+          <cmdb xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+            <webfilter>
+               <urlfilter mkey="id" nc:operation="replace">
+                 <id>1</id>
+                 <comment>New Comment</comment>
+               </urlfilter>
+            </webfilter>
+          </cmdb>"""
+
+    root = etree.fromstring(netconf_data)
+
+    (url, content, operation) = yrc.extract_url_content_operation(root)
+
+    assert url == "cmdb/webfilter/urlfilter/1"
+    assert content == {'id': '1', 'comment': 'New Comment'}
+    assert operation == "replace"
+
+
+def test_edit_urlfilter_child_object():
+    yrc = YangRestConverter()
+
+    netconf_data = """
+	      <cmdb xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+            <webfilter>
+               <urlfilter mkey="id">
+                 <id>1</id>
+                 <entries nc:operation="replace" mkey="id">
+                        <id>48</id>
+                        <url>www.test_modified.com</url>
+                 </entries>
+               </urlfilter>
+            </webfilter>
+          </cmdb>"""
+
+    root = etree.fromstring(netconf_data)
+
+    (url, content, operation) = yrc.extract_url_content_operation(root)
+
+    assert url == "cmdb/webfilter/urlfilter/1/entries/48"
+    assert content == {'id': '48', 'url': 'www.test_modified.com'}
+    assert operation == "replace"
+
+
+
 if __name__ == "__main__":
     test_create_urlfilter_object()
     test_create_urlfilter_child_object()
     test_delete_urlfilter_child_object()
     test_delete_fw_address_object()
-    #Not Supported yet test_purge_fw_address()
     test_get_urlfilter_object()
     test_get_urlfilter_child_object()
+    test_edit_urlfilter_object()
+    test_edit_urlfilter_child_object()
 
 # Current status of features supported
 #
@@ -181,13 +230,13 @@ if __name__ == "__main__":
 # Purge Table            X
 # Retrieve Object        yes
 # Create Object          yes
-# Edit Object            ?
+# Edit Object            yes
 # Delete Object          yes
 # Clone Object           X
 # Move Object            X
 # Retrieve Child Object  yes
 # Append Child Object    yes
-# Edit Child Object      ?
+# Edit Child Object      yes
 # Delete Child Object    yes
 # Purge Child Table      X
 # Retrieve complex Table ?
