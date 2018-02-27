@@ -17,8 +17,8 @@
 	      <cmdb xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
             <webfilter>
                <urlfilter mkey="id" nc:operation="create">
-                 <id>default94</id>
-                 <name>default94</name>
+                 <id>default</id>
+                 <name>default</name>
                  <comment></comment>
                  <one-arm-ips-urlfilter>disable</one-arm-ips-urlfilter>
                  <ip-addr-block>disable</ip-addr-block>

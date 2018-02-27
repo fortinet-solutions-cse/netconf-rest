@@ -17,10 +17,13 @@
 	      <cmdb>
             <webfilter>
                <urlfilter mkey="id">
-                 <id>1</id>
+                 <id>default</id>
                  <entries nc:operation="create" mkey="id">
                         <id>48</id>
                         <url>www.test.com</url>
+                        <type>simple</type>
+                        <status>enable</status>
+                        <exempt>pass</exempt>
                  </entries>
                </urlfilter>
             </webfilter>
@@ -29,6 +32,12 @@
 	</edit-config>
   </rpc>
   
+  ]]>]]>
+
+
+<rpc message-id="110"
+                xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><close-session/></rpc>
+
   ]]>]]>
 
 
