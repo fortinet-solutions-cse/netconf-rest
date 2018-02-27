@@ -30,10 +30,6 @@ import logging
 import argparse
 from time import sleep
 
-# **********************************
-# Netconf imports
-# **********************************
-
 try:
     from lxml import etree
 except ImportError:
@@ -41,7 +37,10 @@ except ImportError:
 
 from netconf import server
 
-from yangrest.yangrestconverter import YangRestConverter
+from yang2rest.yang2restconverter import Yang2RestConverter
+from yang2rest.restcaller import RestCaller
+
+from fortiosapi import FortiOSAPI
 
 # **********************************
 # Global definitions
@@ -94,7 +93,7 @@ class NetconfMethods(server.NetconfMethods):
 
         netconf_data = rpc.find("nc:edit-config/nc:config/", ns)
 
-        yrc = YangRestConverter()
+        yrc = Yang2RestConverter()
 
         (url, content, operation) = yrc.extract_url_content_operation(netconf_data)
 
@@ -102,7 +101,20 @@ class NetconfMethods(server.NetconfMethods):
         logger.info("Content: %s", format(content))
         logger.info("Operation: %s", format(operation))
 
-        return etree.Element("ok")
+        fosapi = FortiOSAPI()
+        fosapi.https('off')
+        fosapi.login('192.168.122.40', 'admin', '')
+
+        rc = RestCaller()
+        rc.set_fos(fosapi)
+        http_result, status = rc.execute_rest_call(operation, url, content)
+
+        fosapi.logout()
+
+        if http_result == 200:
+            return etree.Element("ok")
+        else:
+            raise Exception('http-result:' + str(http_result) + ', ' + status)
 
     def rpc_create_subscription(self, unused_session, rpc, *unused_params):
         return etree.Element("ok")

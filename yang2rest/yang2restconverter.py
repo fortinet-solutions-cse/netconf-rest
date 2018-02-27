@@ -57,7 +57,7 @@ class YangUtil:
         return content
 
 
-class YangRestConverter(object):
+class Yang2RestConverter(object):
 
     def _extract_path_until_final_resource(self, netconf_data, add_deepest_key=False):
         # Algorithm to calculate the rest of the path consists on going down until
@@ -80,12 +80,11 @@ class YangRestConverter(object):
 
         if YangUtil.contains_operation(netconf_data):
             path += "/" + YangUtil.remove_urn(netconf_data.tag)
-            if add_deepest_key:
-                path += "/" + YangUtil.remove_urn(YangUtil.extract_mkey(netconf_data))
+            #if add_deepest_key:
+            #    path += "/" + YangUtil.remove_urn(YangUtil.extract_mkey(netconf_data))
             return path
         else:
             return path
- #            raise Exception("Error, not able to calculate path. Is operation defined?")
 
     def _extract_name_content_operation(self, netconf_data):
 

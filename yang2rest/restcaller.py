@@ -45,9 +45,8 @@ class RestCaller():
 
         splitted_url = url.split('/')
 
-        # path = 'api/v2/'+('/'.join(splitted_url[0:2]))
-        path = splitted_url[1]
-        name = splitted_url[2]
+        path = '/'.join(splitted_url[1:-1])
+        name = splitted_url[-1]
 
         fos_method = getattr(self._fos, rest_op)
 

@@ -13,16 +13,21 @@
 	  <default-operation>none</default-operation>
 	  <nc:config xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
 	      <cmdb>
-            <firewall>
-               <address mkey="id" nc:operation="delete">
-                 <id>address1</id>
-               </address>
-            </firewall>
+            <webfilter>
+               <urlfilter mkey="id" nc:operation="delete">
+                 <id>1</id>
+               </urlfilter>
+            </webfilter>
           </cmdb>
 	  </nc:config>
 	</edit-config>
   </rpc>
   
-  ]]>]]>
+]]>]]>
 
+<rpc message-id="110" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <close-session/>
+</rpc>
+
+]]>]]>
 

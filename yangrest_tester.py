@@ -1,9 +1,9 @@
-from yangrest.yangrestconverter import YangRestConverter
+from yang2rest.yang2restconverter import Yang2RestConverter
 from lxml import etree
 
 
 def test_create_urlfilter_object():
-    yrc = YangRestConverter()
+    yrc = Yang2RestConverter()
 
     netconf_data = """
 	      <cmdb xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -32,7 +32,7 @@ def test_create_urlfilter_object():
 
 
 def test_create_urlfilter_child_object():
-    yrc = YangRestConverter()
+    yrc = Yang2RestConverter()
 
     netconf_data = """
 	      <cmdb xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -57,7 +57,7 @@ def test_create_urlfilter_child_object():
 
 
 def test_delete_urlfilter_child_object():
-    yrc = YangRestConverter()
+    yrc = Yang2RestConverter()
 
     netconf_data = """
           <cmdb xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -81,7 +81,7 @@ def test_delete_urlfilter_child_object():
 
 
 def test_delete_fw_address_object():
-    yrc = YangRestConverter()
+    yrc = Yang2RestConverter()
 
     netconf_data = """
           <cmdb xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -101,7 +101,7 @@ def test_delete_fw_address_object():
     assert operation == "delete"
 
 def test_purge_fw_address():
-    yrc = YangRestConverter()
+    yrc = Yang2RestConverter()
 
     netconf_data = """
           <cmdb xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -121,7 +121,7 @@ def test_purge_fw_address():
 
 
 def test_get_urlfilter_object():
-    yrc = YangRestConverter()
+    yrc = Yang2RestConverter()
 
     netconf_data = """
 	      <cmdb xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -141,7 +141,7 @@ def test_get_urlfilter_object():
     assert operation == None
 
 def test_get_urlfilter_child_object():
-    yrc = YangRestConverter()
+    yrc = Yang2RestConverter()
 
     netconf_data = """
 	      <cmdb xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -165,7 +165,7 @@ def test_get_urlfilter_child_object():
 
 
 def test_edit_urlfilter_object():
-    yrc = YangRestConverter()
+    yrc = Yang2RestConverter()
 
     netconf_data = """
           <cmdb xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -187,7 +187,7 @@ def test_edit_urlfilter_object():
 
 
 def test_edit_urlfilter_child_object():
-    yrc = YangRestConverter()
+    yrc = Yang2RestConverter()
 
     netconf_data = """
 	      <cmdb xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -221,6 +221,8 @@ if __name__ == "__main__":
     test_get_urlfilter_child_object()
     test_edit_urlfilter_object()
     test_edit_urlfilter_child_object()
+
+    print("\nAll tests finished OK")
 
 # Current status of features supported
 #
