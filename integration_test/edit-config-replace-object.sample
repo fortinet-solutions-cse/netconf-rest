@@ -13,15 +13,12 @@
 	  <default-operation>none</default-operation>
 	  <nc:config xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
 	      <cmdb>
-            <application>
-               <list mkey="id">
-                 <id>profile1</id>
-                 <entries mkey="id" nc:operation="replace">
-                   <id>1</id>
-                   <application>[{"id": 31236}, {"id":31237}]</application>
-                 </entries>
-               </list>
-            </application>
+            <webfilter>
+               <urlfilter mkey="id" nc:operation="replace">
+                 <id>1</id>
+                 <comment>A new comment</comment>
+               </urlfilter>
+            </webfilter>
           </cmdb>
 	  </nc:config>
 	</edit-config>
@@ -29,4 +26,9 @@
   
   ]]>]]>
 
+<rpc message-id="110" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <close-session/>
+</rpc>
+
+]]>]]>
 
