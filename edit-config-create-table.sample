@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?> 
+        <hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+        <capabilities>
+            <capability>urn:ietf:params:netconf:base:1.0</capability>
+        </capabilities>
+        </hello>
+    
+   ]]>]]>
+
+ <rpc message-id="109" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+	<edit-config>
+	  <target><running/></target>
+	  <default-operation>none</default-operation>
+	  <test-option>test-then-set</test-option>
+	  <error-option>rollback-on-error</error-option>
+	  <nc:config xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+	      <cmdb xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
+            <webfilter>
+               <urlfilter mkey="id" nc:operation="create">
+                 <id>default94</id>
+                 <name>default94</name>
+                 <comment></comment>
+                 <one-arm-ips-urlfilter>disable</one-arm-ips-urlfilter>
+                 <ip-addr-block>disable</ip-addr-block>
+                 <entries></entries>
+               </urlfilter>
+            </webfilter>
+          </cmdb>
+	  </nc:config>
+	</edit-config>
+  </rpc>
+  
+  ]]>]]>
+
+
+<rpc message-id="110" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <close-session/>
+</rpc>
+
+  ]]>]]>
+
+
