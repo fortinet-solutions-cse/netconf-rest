@@ -53,6 +53,13 @@ logger = logging.getLogger(__name__)  # pylint: disable=C0103
 NC_PORT = 830
 USER = ""
 PASSWORD = ""
+NC_USER = ''
+NC_PASSWORD = ''
+
+FGT_HOST='192.168.122.40'
+FGT_USER=''
+FGT_PASSWORD=''
+
 SERVER_DEBUG = False
 
 
@@ -103,7 +110,7 @@ class NetconfMethods(server.NetconfMethods):
 
         fosapi = FortiOSAPI()
         fosapi.https('off')
-        fosapi.login('192.168.122.40', 'admin', '')
+        fosapi.login(FGT_HOST, FGT_USER, FGT_PASSWORD)
 
         rc = RestCaller()
         rc.set_fos(fosapi)
@@ -132,8 +139,8 @@ def setup_netconf():
     if netconf_server is not None:
         logger.error("Netconf Server is already up and running")
     else:
-        server_ctl = server.SSHUserPassController(username=USER,
-                                                  password=PASSWORD)
+        server_ctl = server.SSHUserPassController(username=NC_USER,
+                                                  password=NC_PASSWORD)
         netconf_server = server.NetconfSSHServer(server_ctl=server_ctl,
                                                  server_methods=NetconfMethods(),
                                                  port=NC_PORT,
