@@ -39,6 +39,7 @@ from netconf import server
 
 from yang2rest.yang2restconverter import Yang2RestConverter
 from yang2rest.restcaller import RestCaller
+from yang2rest.json2yang import Json2Yang
 
 from fortiosapi import FortiOSAPI
 
@@ -87,8 +88,44 @@ class NetconfMethods(server.NetconfMethods):
         return etree.Element("ok")
 
     def rpc_get_config(self, unused_session, rpc, *unused_params):
-        data = etree.Element("data")
-        return data
+        logger.info("rpc_get_config")
+
+        logger.debug("RPC received:%s", format(etree.tostring(rpc, pretty_print=True)))
+
+        # Locate object
+        ns = {"nc": "urn:ietf:params:xml:ns:netconf:base:1.0"}
+
+        netconf_data = rpc.find("nc:get-config/nc:filter/", ns)
+
+        if netconf_data is None:
+            raise Exception("Not able to find filter tag")
+
+        y2rc = Yang2RestConverter()
+
+        (url, content, operation) = y2rc.extract_url_content_operation(netconf_data)
+
+        logger.info("URL: %s", format(url))
+        logger.info("Content: %s", format(content))
+        logger.info("Operation: %s", format(operation))
+
+        fosapi = FortiOSAPI()
+        fosapi.https('off')
+        fosapi.login(FGT_HOST, FGT_USER, FGT_PASSWORD)
+
+        rc = RestCaller()
+        rc.set_fos(fosapi)
+        http_result, http_content = rc.execute_rest_call(operation, url, content)
+
+        fosapi.logout()
+
+        j2y = Json2Yang()
+
+        yang_answer = j2y.convert_json(str(http_content).replace("'",'"'))
+
+        if http_result == 200:
+            return yang_answer
+        else:
+            raise Exception('http-result:' + str(http_result) + ', ' + http_content)
 
     def rpc_edit_config(self, unused_session, rpc, *unused_params):
         logger.info("rpc_edit_config")

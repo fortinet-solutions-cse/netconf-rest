@@ -23,7 +23,8 @@ class RestCaller():
                   'replace': 'put',
                   'merge': 'put',
                   'delete': 'delete'}
-
+        if operation is None:
+            operation = 'get'
         return op_map[operation]
 
     def set_fos(self, fortiosapi):
@@ -52,7 +53,13 @@ class RestCaller():
 
         content = self.check_empty_values(content)
 
-        result = fos_method(path, name, data=content, vdom='root')
+        if rest_op=='get':
+            result = fos_method(path, name)
+            return result['http_status'], result['results']
 
-        return result['http_status'], result['status']
+        else:
+            result = fos_method(path, name, data=content, vdom='root')
+            return result['http_status'], result['status']
+
+
 

@@ -122,11 +122,8 @@ class Yang2RestConverter(object):
 
         logger.debug("Api Type: %s", api_type)
 
-        if api_type == "cmdb":
+        if api_type == "cmdb" or api_type == "monitor":
             (path, content, operation) = self._extract_path_content_operation(netconf_data[0])
-
-        elif api_type == "monitor":
-            raise Exception("Monitor url are not supported yet")
         else:
             raise Exception("Main tag is not cmdb or monitor. Cannot continue.")
 
