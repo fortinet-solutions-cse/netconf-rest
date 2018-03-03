@@ -16,6 +16,9 @@
         <webfilter>
           <urlfilter mkey="id">
             <id>1</id>
+            <entries mkey="id">
+              <id>48</id>
+            </entries>
           </urlfilter>
         </webfilter>
       </cmdb>

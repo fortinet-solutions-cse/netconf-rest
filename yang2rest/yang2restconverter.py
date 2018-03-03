@@ -69,19 +69,20 @@ class Yang2RestConverter(object):
             if YangUtil.contains_mkey(netconf_data):
                 path += "/" + YangUtil.extract_mkey(netconf_data)
                 if len(netconf_data)>1:
+                    # In order to continue navigation down in the yang model,
+                    # it is assumed that the mkey is in position 0 and the next
+                    # tag in position 1
                     netconf_data = netconf_data[1]
                 else:
                     break
             else:
-                if len(netconf_data>0):
+                if len(netconf_data)>0:
                     netconf_data = netconf_data[0]
                 else:
                     break
 
         if YangUtil.contains_operation(netconf_data):
             path += "/" + YangUtil.remove_urn(netconf_data.tag)
-            #if add_deepest_key:
-            #    path += "/" + YangUtil.remove_urn(YangUtil.extract_mkey(netconf_data))
             return path
         else:
             return path

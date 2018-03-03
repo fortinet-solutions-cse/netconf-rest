@@ -14,8 +14,7 @@
     <filter type="subtree">
       <cmdb>
         <webfilter>
-          <urlfilter mkey="id">
-            <id>1</id>
+          <urlfilter>
           </urlfilter>
         </webfilter>
       </cmdb>
