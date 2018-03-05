@@ -81,11 +81,19 @@ class RestCaller():
 
         if rest_op=='get':
             result = fos_method(path, name)
-            return result['http_status'], result['results']
+            if 'results' in result:
+                http_result_or_status = result['results']
+            else:
+                http_result_or_status = result['status']
+            return result['http_status'], http_result_or_status
 
         else:
             result = fos_method(path, name, data=content, vdom='root')
-            return result['http_status'], result['status']
+            if 'results' in result:
+                http_result_or_status = result['results']
+            else:
+                http_result_or_status = result['status']
+            return result['http_status'], http_result_or_status
 
 
 

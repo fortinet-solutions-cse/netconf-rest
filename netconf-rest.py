@@ -140,12 +140,9 @@ class NetconfMethods(server.NetconfMethods):
 
         fosapi.logout()
 
-        j2y = Json2Yang()
-
-        yang_answer = j2y.convert_json(str(http_content).replace("'",'"'))
-
         if http_result == 200:
-            return yang_answer
+            j2y = Json2Yang()
+            return j2y.convert_json(str(http_content).replace("'",'"'))
         else:
             raise Exception('http-result:' + str(http_result) + ', ' + http_content)
 
