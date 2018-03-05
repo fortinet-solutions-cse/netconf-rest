@@ -1,3 +1,33 @@
+#!/usr/bin/env python
+
+"""
+#************************************************
+# Copyright 2018 Fortinet, Inc.
+#
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+#************************************************
+# Author: "Miguel Angel Muñoz González" (magonzalez at fortinet.com)
+#
+# Converts json string to yang using lxml etree nodes.
+#
+# This is intended to transform JSON content typically coming
+# from a REST answer into a YANG structure using XML nodes (lxml)
+#
+#************************************************
+"""
+
 import json
 
 try:
@@ -5,6 +35,15 @@ try:
 except ImportError:
     from xml.etree import ElementTree as etree
 
+
+__author__ = "Miguel Angel Muñoz González (magonzalez at fortinet.com)"
+__copyright__ = "Copyright 2018, Fortinet, Inc."
+__credits__ = "Miguel Angel Muñoz"
+__license__ = "Apache 2.0"
+__version__ = "0.5"
+__maintainer__ = "Miguel Ángel Muñoz"
+__email__ = "magonzalez at fortinet.com"
+__status__ = "Development"
 
 
 class Json2Yang():

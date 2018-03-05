@@ -1,18 +1,25 @@
-#!/usr/bin/sudo python
+#!/usr/bin/env python
 
 """
 #************************************************
-# Netconf to Rest translator
+# Copyright 2018 Fortinet, Inc.
 #
-# Use: ./netconf-rest.py
 #
-# Miguel Angel Munoz Gonzalez
-# **********(at)fortinet.com
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
 #
 #************************************************
-
-"""
-
+# Netconf to Rest translator for FortiGate
+#
 # +----------+-----------------------------------------+
 # | RESTCONF | NETCONF                                 |
 # +----------+-----------------------------------------+
@@ -25,6 +32,12 @@
 # | DELETE   | < edit - config > (operation="delete")  |
 # +----------+-----------------------------------------+
 
+# Use: sudo ./netconf-rest.py
+#
+# Author: "Miguel Angel Muñoz González" (********* at fortinet.com)
+#
+#************************************************
+"""
 from __future__ import absolute_import, division, unicode_literals, print_function, nested_scopes
 import logging
 import argparse
@@ -42,6 +55,15 @@ from yang2rest.restcaller import RestCaller
 from yang2rest.json2yang import Json2Yang
 
 from fortiosapi import FortiOSAPI
+
+__author__ = "Miguel Angel Muñoz González (********** at fortinet.com)"
+__copyright__ = "Copyright 2018, Fortinet, Inc."
+__credits__ = "Miguel Angel Muñoz"
+__license__ = "Apache 2.0"
+__version__ = "0.5"
+__maintainer__ = "Miguel Ángel Muñoz"
+__email__ = "******* at fortinet.com"
+__status__ = "Development"
 
 # **********************************
 # Global definitions
