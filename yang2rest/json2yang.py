@@ -40,7 +40,7 @@ __author__ = "Miguel Angel Muñoz González (magonzalez at fortinet.com)"
 __copyright__ = "Copyright 2018, Fortinet, Inc."
 __credits__ = "Miguel Angel Muñoz"
 __license__ = "Apache 2.0"
-__version__ = "0.5"
+__version__ = "0.6"
 __maintainer__ = "Miguel Ángel Muñoz"
 __email__ = "magonzalez at fortinet.com"
 __status__ = "Development"
@@ -52,6 +52,11 @@ class Json2Yang():
         for elem in list:
             node.append(elem)
         return node
+
+    def _check_tag_and_fix(self, string):
+        if str.isdigit(string[0]):
+            string = 'tag_'+ string
+        return string
 
     def _yang_builder(self, json_structure):
 
@@ -66,6 +71,8 @@ class Json2Yang():
                 temp = self._yang_builder(elem)
                 if type(temp) is list:
                     node = self._add_list_of_nodes_to_node(node, temp)
+                elif type(temp) is str:
+                    node.text = temp
                 else:
                     node.append(temp)
                 result.append(node)
@@ -76,7 +83,7 @@ class Json2Yang():
         elif json_type is dict:
             result = []
             for elem in json_structure:
-                node = etree.Element(elem)
+                node = etree.Element(self._check_tag_and_fix(elem))
                 temp = self._yang_builder(json_structure[elem])
                 if type(temp) is str:
                     node.text = temp

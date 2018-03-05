@@ -31,7 +31,7 @@ __author__ = "Miguel Angel Muñoz González (magonzalez at fortinet.com)"
 __copyright__ = "Copyright 2018, Fortinet, Inc."
 __credits__ = "Miguel Angel Muñoz"
 __license__ = "Apache 2.0"
-__version__ = "0.5"
+__version__ = "0.6"
 __maintainer__ = "Miguel Ángel Muñoz"
 __email__ = "magonzalez at fortinet.com"
 __status__ = "Development"
@@ -43,14 +43,21 @@ class RestCaller():
         self._fos = None
 
     @staticmethod
-    def _map(operation):
+    def _map(operation, url):
         op_map = {'get': 'get',
                   'create': 'post',
                   'replace': 'put',
                   'merge': 'put',
                   'delete': 'delete'}
+        # Special cases:
         if operation is None:
             operation = 'get'
+
+        tmp = url.split('/')
+        tmp = tmp[0]
+        if operation is 'get' and url.split('/')[0] == 'monitor':
+            return 'monitor'
+
         return op_map[operation]
 
     def set_fos(self, fortiosapi):
@@ -68,7 +75,7 @@ class RestCaller():
         return content
 
     def execute_rest_call(self, operation, url, content):
-        rest_op = RestCaller._map(operation)
+        rest_op = RestCaller._map(operation, url)
 
         splitted_url = url.split('/')
 
@@ -79,13 +86,21 @@ class RestCaller():
 
         content = self.check_empty_values(content)
 
-        if rest_op=='get':
+        if rest_op=='get' or rest_op=='monitor':
+
             result = fos_method(path, name)
+
             if 'results' in result:
                 http_result_or_status = result['results']
             else:
                 http_result_or_status = result['status']
-            return result['http_status'], http_result_or_status
+
+            if 'http_status' in result:
+                http_status_or_status = result['http_status']
+            else:
+                http_status_or_status = result['status']
+
+            return http_status_or_status, http_result_or_status
 
         else:
             result = fos_method(path, name, data=content, vdom='root')

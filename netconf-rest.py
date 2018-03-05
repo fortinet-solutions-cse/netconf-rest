@@ -56,11 +56,13 @@ from yang2rest.json2yang import Json2Yang
 
 from fortiosapi import FortiOSAPI
 
+import sys, traceback
+
 __author__ = "Miguel Angel Muñoz González (********** at fortinet.com)"
 __copyright__ = "Copyright 2018, Fortinet, Inc."
 __credits__ = "Miguel Angel Muñoz"
 __license__ = "Apache 2.0"
-__version__ = "0.5"
+__version__ = "0.6"
 __maintainer__ = "Miguel Ángel Muñoz"
 __email__ = "******* at fortinet.com"
 __status__ = "Development"
@@ -106,8 +108,44 @@ class NetconfMethods(server.NetconfMethods):
         return
 
     def rpc_get(self, unused_session, rpc, *unused_params):
-        logger.info("rpc_get %s %s %s", unused_session, rpc, unused_params)
-        return etree.Element("ok")
+        logger.info("rpc_get")
+
+        logger.debug("RPC received:%s", format(etree.tostring(rpc, pretty_print=True)))
+
+        # Locate object
+        ns = {"nc": "urn:ietf:params:xml:ns:netconf:base:1.0"}
+
+        netconf_data = rpc.find("nc:get/nc:filter/", ns)
+
+        if netconf_data is None:
+            raise Exception("Not able to find filter tag")
+
+        y2rc = Yang2RestConverter()
+
+        (url, content, operation) = y2rc.extract_url_content_operation(netconf_data)
+
+        logger.info("URL: %s", format(url))
+        logger.info("Content: %s", format(content))
+        logger.info("Operation: %s", format(operation))
+
+        fosapi = FortiOSAPI()
+        fosapi.https('off')
+        fosapi.login(FGT_HOST, FGT_USER, FGT_PASSWORD)
+
+        rc = RestCaller()
+        rc.set_fos(fosapi)
+        http_result, http_content = rc.execute_rest_call(operation, url, content)
+
+        fosapi.logout()
+
+        if http_result == 200 or 'success':
+            if not http_content or http_content is None:
+                return etree.Element('ok')
+            else:
+                j2y = Json2Yang()
+                return j2y.convert_json(str(http_content).replace("'", '"'))
+        else:
+            raise Exception('http-result:' + str(http_result) + ', ' + http_content)
 
     def rpc_get_config(self, unused_session, rpc, *unused_params):
         logger.info("rpc_get_config")
@@ -142,7 +180,7 @@ class NetconfMethods(server.NetconfMethods):
 
         if http_result == 200:
             j2y = Json2Yang()
-            return j2y.convert_json(str(http_content).replace("'",'"'))
+            return j2y.convert_json(str(http_content).replace("'", '"'))
         else:
             raise Exception('http-result:' + str(http_result) + ', ' + http_content)
 

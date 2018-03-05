@@ -9,7 +9,7 @@ Check: https://fndn.fortinet.net/index.php?/documents/file/84-fortios-56-rest-ap
 
 At the moment **only cmdb commands are supported**, monitor commands will be added on a later version.
 
-Please check examples in **./integration_test**
+Please check examples in **./tests/integration_test**
 To run examples start the application and run some tests:
 
 ```
@@ -46,7 +46,7 @@ Operation mapping between Netconf and REST protocols.
 Operations supported currently
 
 ```
- Retrieve Table         ?
+ Retrieve Table         yes
  Retrieve Table Schema  X
  Retrieve Table Default X
  Purge Table            X
@@ -61,9 +61,10 @@ Operations supported currently
  Edit Child Object      yes
  Delete Child Object    yes
  Purge Child Table      X
- Retrieve complex Table ?
- Edit Complex Table     ?
+ Retrieve complex Table X
+ Edit Complex Table     X
 
- ? Not tested yet
  X Not supported
  ```
+
+ Note: For 'Monitor' (not CMDB) requests, POST operations and parameters are not supported.
