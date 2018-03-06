@@ -7,7 +7,7 @@ It does not validate internally against any schema. If the request is malformed,
 To write a new netconf request please to make use of FGT REST API schema.
 Check: https://fndn.fortinet.net/index.php?/documents/file/84-fortios-56-rest-api-reference/
 
-At the moment **only cmdb commands are supported**, monitor commands will be added on a later version.
+At the moment cmdb and monitor commands are supported. Some special operations such as monitor with POST requests are not supported yet. Monitor requests with params are not supported either. Will be supported if there is popular demand.
 
 Please check examples in **./tests/integration_test**
 To run examples start the application and run some tests:
@@ -38,7 +38,7 @@ Operation mapping between Netconf and REST protocols.
  | GET      | < get - config >, < get >               |
  | POST     | < edit - config > (operation="create")  |
  | PUT      | < edit - config > (operation="replace") |
- | PATCH    | < edit - config > (operation="merge")   |
+ | PUT      | < edit - config > (operation="merge")   |
  | DELETE   | < edit - config > (operation="delete")  |
  +----------+-----------------------------------------+
  ```
