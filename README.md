@@ -68,3 +68,9 @@ Operations supported currently
  ```
 
  Note: For 'Monitor' (not CMDB) requests, POST operations and parameters are not supported.
+ 
+###### Wish List
+
+- Avoid usage of mkey for create requests
+- POST operations for Monitor API commands
+- Parameters on Monitor API commands
