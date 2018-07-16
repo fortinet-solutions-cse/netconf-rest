@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+# coding=utf-8
 """
 #************************************************
 # Copyright 2018 Fortinet, Inc.
@@ -248,7 +248,7 @@ def setup_netconf():
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Netconf Server with SNMP trap listening capabilities")
+    parser = argparse.ArgumentParser(description="Netconf Server")
     parser.add_argument("-d", "--debug", action="store_true", help="Activate debug logs")
     args = parser.parse_args()
 
@@ -262,8 +262,8 @@ if __name__ == "__main__":
 
     setup_netconf()
 
-    # Start the loop for SNMP / Netconf
-    logger.info("Listening Netconf - Snmp")
+    # Start the loop for Netconf
+    logger.info("Listening Netconf")
 
     while True:
         sleep(5)
