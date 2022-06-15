@@ -76,8 +76,6 @@ netconf_server = None  # pylint: disable=C0103
 logger = logging.getLogger(__name__)  # pylint: disable=C0103
 
 NC_PORT = 830
-USER = ""
-PASSWORD = ""
 NC_USER = ''
 NC_PASSWORD = ''
 
